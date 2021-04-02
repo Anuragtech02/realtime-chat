@@ -22,8 +22,11 @@ h4 {
 h5 {
   font-size: 1.2rem;
 }
-p {
+h6 {
   font-size: 1rem;
+}
+p {
+  font-size: 0.9rem;
 }
 input {
   padding: 10px 5px;
@@ -31,6 +34,6 @@ input {
   border-radius: 4px;
   outline: none;
   &::placeholder {
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(0, 0, 0, 0.6);
   }
 }

@@ -9,6 +9,7 @@ import { withRouter } from "react-router";
 
 const Sidebar = ({ history }) => {
   const [search, setSearch] = useState("");
+  const [current, setCurrent] = useState("");
   const [chats, setChats] = useState([
     {
       name: "Anurag pal",
@@ -32,6 +33,11 @@ const Sidebar = ({ history }) => {
     },
   ]);
 
+  const handleClickChat = (chat) => {
+    history.push(`/chat/${chat.name}`);
+    setCurrent(chat.name);
+  };
+
   return (
     <aside className={styles.container}>
       <div className={styles.actionsContainer}>
@@ -54,9 +60,11 @@ const Sidebar = ({ history }) => {
           {chats?.length ? (
             chats.map((chat, i) => (
               <div
-                onClick={() => history.push(`/${chat.name}`)}
+                onClick={() => handleClickChat(chat)}
                 key={i}
-                className={styles.chat}
+                className={
+                  current === chat.name ? styles.selectedChat : styles.chat
+                }
               >
                 <Avatar
                   variant="rounded"

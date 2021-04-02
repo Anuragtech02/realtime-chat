@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./SidebarActions.module.scss";
 import { MessageCircle, User, Settings } from "react-feather";
 import { IconButton, Avatar, Tooltip, makeStyles } from "@material-ui/core";
@@ -6,6 +6,7 @@ import portrait from "../../Assets/portrait.jpg";
 
 const SidebarActions = () => {
   const classes = useStyles();
+  const [current, setCurrent] = useState("chat");
 
   const actions = [
     {
@@ -31,8 +32,19 @@ const SidebarActions = () => {
         {actions.map((item) => (
           <div key={item.name} className={styles.actionItem}>
             <Tooltip title={item.name} placement="right">
-              <IconButton>
-                <item.icon color="rgba(255,255,255,0.8)" />
+              <IconButton
+                style={{
+                  background:
+                    current === item.name
+                      ? "var(--secondaryColor)"
+                      : "transparent",
+                }}
+              >
+                <item.icon
+                  color={
+                    current === item.name ? "white" : "rgba(255,255,255,0.8)"
+                  }
+                />
               </IconButton>
             </Tooltip>
           </div>

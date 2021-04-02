@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import styles from "./Sidebar.module.scss";
-import SidebarActions from "./SidbearActions";
+import SidebarActions from "./SidebarActions";
 import { Search, User } from "react-feather";
 import { Avatar } from "@material-ui/core";
 import userIcon from "../../Assets/user.svg";
 import portraitIcon from "../../Assets/portrait.jpg";
+import { withRouter } from "react-router";
 
-const Sidebar = () => {
+const Sidebar = ({ history }) => {
   const [search, setSearch] = useState("");
   const [chats, setChats] = useState([
     {
@@ -14,19 +15,19 @@ const Sidebar = () => {
       message: "Hi, Hope you're doing well! Welcome to the application.",
     },
     {
-      name: "Anurag pal",
+      name: "Kalash pal",
       message: "Hi, Hope you're doing well! Welcome to the application.",
     },
     {
-      name: "Anurag pal",
+      name: "Aayush Singh",
       message: "Hi, Hope you're doing well! Welcome to the application.",
     },
     {
-      name: "Anurag pal",
+      name: "Hello Boy",
       message: "Hi, Hope you're doing well! Welcome to the application.",
     },
     {
-      name: "Anurag pal",
+      name: "Iron Man",
       message: "Hi, Hope you're doing well! Welcome to the application.",
     },
   ]);
@@ -52,7 +53,11 @@ const Sidebar = () => {
           <h6>My Chats</h6>
           {chats?.length ? (
             chats.map((chat, i) => (
-              <div key={i} className={styles.chat}>
+              <div
+                onClick={() => history.push(`/${chat.name}`)}
+                key={i}
+                className={styles.chat}
+              >
                 <Avatar
                   variant="rounded"
                   style={{ background: "rgba(0,0,0,0.1)" }}
@@ -76,4 +81,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default withRouter(Sidebar);

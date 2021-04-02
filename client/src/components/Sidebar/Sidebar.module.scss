@@ -30,7 +30,7 @@
         margin-left: 5px;
         width: 100%;
       }
-      border: 1px solid rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 0, 0, 0.15);
       border-radius: 4px;
       padding: 10px 5px;
     }
@@ -46,6 +46,7 @@
       }
       .chat {
         width: 100%;
+        cursor: pointer;
         @extend .flexRow;
         justify-content: flex-start;
         // border-bottom: 1.5px solid rgba(0, 0, 0, 0.08);

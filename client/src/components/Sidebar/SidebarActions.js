@@ -4,7 +4,7 @@ import { MessageCircle, User, Settings } from "react-feather";
 import { IconButton, Avatar, Tooltip, makeStyles } from "@material-ui/core";
 import portrait from "../../Assets/portrait.jpg";
 
-const SidbearActions = () => {
+const SidebarActions = () => {
   const classes = useStyles();
 
   const actions = [
@@ -32,7 +32,7 @@ const SidbearActions = () => {
           <div key={item.name} className={styles.actionItem}>
             <Tooltip title={item.name} placement="right">
               <IconButton>
-                <item.icon color="rgba(0,0,0,0.8)" />
+                <item.icon color="rgba(255,255,255,0.8)" />
               </IconButton>
             </Tooltip>
           </div>
@@ -52,7 +52,7 @@ const SidbearActions = () => {
   );
 };
 
-export default SidbearActions;
+export default SidebarActions;
 
 const useStyles = makeStyles((theme) => ({
   medium: {

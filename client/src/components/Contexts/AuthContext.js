@@ -5,8 +5,14 @@ export const AuthContext = createContext({});
 const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState({});
 
+  //Set current user to state and localstorage
+  const handleChangeUser = (user) => {
+    setCurrentUser({ name: user.name, room: user.room });
+    localStorage.setItem("rc-curr-user", JSON.stringify(user));
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser }}>
+    <AuthContext.Provider value={{ currentUser, handleChangeUser }}>
       {children}
     </AuthContext.Provider>
   );

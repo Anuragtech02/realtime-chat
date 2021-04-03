@@ -3,17 +3,21 @@ import styles from "./Login.module.scss";
 import { Button, CircularProgress } from "@material-ui/core";
 import { AuthContext } from "../Contexts/AuthContext";
 import { withRouter } from "react-router-dom";
+import axios from "axios";
+import short from "short-uuid";
 
 const Login = ({ history }) => {
   const [name, setName] = useState("");
+  const [room, setRoom] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [name, setName] = useState("");
 
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const { currentUser, handleChangeUser } = useContext(AuthContext);
 
   useEffect(() => {
-    if (currentUser?.name && !loading) history.push("/");
-  }, [currentUser, history, loading]);
+    if (currentUser?.name && room?.length && !loading) {
+      history.push(`/${room}`);
+    }
+  }, [currentUser, history, loading, room]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -21,12 +25,13 @@ const Login = ({ history }) => {
       alert("Please enter valid name");
       return;
     }
+    const sUid = short.generate().slice(0, 10);
+    if (!room?.trim().length) setRoom(sUid);
     setLoading(true);
     setTimeout(() => {
-      setCurrentUser({ name });
+      handleChangeUser({ name, room: room || sUid });
       setLoading(false);
     }, 1000);
-    // history.push("/");
   };
 
   return (
@@ -42,7 +47,17 @@ const Login = ({ history }) => {
           placeholder="Name"
           onChange={(e) => setName(e.target.value)}
         />
-        <Button className={styles.submitBtn} variant="default" type="submit">
+        <input
+          value={room}
+          type="text"
+          disabled={loading}
+          placeholder="Room ID (optional)"
+          onChange={(e) => setRoom(e.target.value)}
+        />
+        <span className={styles.helperText}>
+          Leave empty to create a new room
+        </span>
+        <Button className={styles.submitBtn} variant="text" type="submit">
           Submit
         </Button>
         <div

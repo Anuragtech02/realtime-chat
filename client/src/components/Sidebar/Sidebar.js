@@ -5,7 +5,8 @@ import { Search, User } from "react-feather";
 import { Avatar } from "@material-ui/core";
 import userIcon from "../../Assets/user.svg";
 import portraitIcon from "../../Assets/portrait.jpg";
-import { withRouter } from "react-router";
+import { withRouter, useParams } from "react-router";
+import clsx from "clsx";
 
 const Sidebar = ({ history }) => {
   const [search, setSearch] = useState("");
@@ -33,10 +34,15 @@ const Sidebar = ({ history }) => {
     },
   ]);
 
-  const handleClickChat = (chat) => {
-    history.push(`/chat/${chat.name}`);
-    setCurrent(chat.name);
+  const handleClickChat = (name) => {
+    history.push(`/${room}/chat/${name}`);
   };
+
+  const { name, room } = useParams();
+
+  React.useEffect(() => {
+    setCurrent(name);
+  }, [name]);
 
   return (
     <aside className={styles.container}>
@@ -60,11 +66,12 @@ const Sidebar = ({ history }) => {
           {chats?.length ? (
             chats.map((chat, i) => (
               <div
-                onClick={() => handleClickChat(chat)}
+                onClick={() => handleClickChat(chat.name)}
                 key={i}
-                className={
-                  current === chat.name ? styles.selectedChat : styles.chat
-                }
+                className={clsx(
+                  styles.chat,
+                  current === chat.name ? styles.selectedChat : ""
+                )}
               >
                 <Avatar
                   variant="rounded"

@@ -4,27 +4,30 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Login, ChatArea, Sidebar } from "./components";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import AuthContextProvider from "./components/Contexts/AuthContext";
+import GlobalContextProvider from "./components/Contexts/GlobalContext";
 
 const App = () => {
   return (
     <AuthContextProvider>
-      <Router>
-        <div className={styles.container}>
-          <Switch>
-            <PrivateRoute
-              path="/"
-              exact
-              component={() => <WithSidebar component={ChatArea} />}
-            />
-            <Route path="/login" exact component={Login} />
-            <PrivateRoute
-              path="/chat/:name"
-              exact
-              component={() => <WithSidebar component={ChatArea} />}
-            />
-          </Switch>
-        </div>
-      </Router>
+      <GlobalContextProvider>
+        <Router>
+          <div className={styles.container}>
+            <Switch>
+              <Route path="/login" exact component={Login} />
+              <PrivateRoute
+                path="/:room"
+                exact
+                component={() => <WithSidebar component={ChatArea} />}
+              />
+              <PrivateRoute
+                path="/:room/chat/:name"
+                exact
+                component={() => <WithSidebar component={ChatArea} />}
+              />
+            </Switch>
+          </div>
+        </Router>
+      </GlobalContextProvider>
     </AuthContextProvider>
   );
 };

@@ -15,6 +15,7 @@
     padding: 10px 20px;
     h4 {
       font-family: "Playfair Display", sans-serif;
+      text-transform: capitalize;
     }
   }
   .chatArea {
@@ -49,6 +50,8 @@
 
     .viewArea {
       height: 90%;
+      overflow: hidden;
+      overflow-y: auto;
       @extend .flexCol;
       justify-content: flex-end;
       .message {

@@ -26,6 +26,8 @@ io.on("connection", (socket) => {
 
     socket.join(room);
 
+    console.log(getUsersInRoom(user));
+
     io.to(room).emit("room-data", {
       room: user.room,
       users: getUsersInRoom(user),
@@ -34,9 +36,10 @@ io.on("connection", (socket) => {
 
   socket.on("send-message", (msg) => {
     console.log(msg);
-    const user = getUser(socket.id);
-    io.to(user.room).emit("receive-message", msg);
-    // socket.broadcast.emit("receive-message", msg);
+    const user = getUser(msg.sender);
+    console.log(user);
+    socket.to(msg.room).emit("receive-message", msg);
+    // socket.broadcast.to(msg.recepient).emit("receive-message", msg);
   });
 
   socket.on("disconnect", () => {

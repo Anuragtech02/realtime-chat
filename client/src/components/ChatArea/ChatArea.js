@@ -21,7 +21,7 @@ const ChatArea = () => {
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [anchor, setAnchor] = useState(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState(new Map());
+  const [messages, setMessages] = useState([]);
 
   const textAreaRef = useRef();
 
@@ -54,22 +54,31 @@ const ChatArea = () => {
       console.log({ data });
       setRoomData(data);
     });
-  }, [socket, name, room, messages, setRoomData]);
+    socket.on("receive-message", (msg) => {
+      console.log({ msg });
+      if (msg.recepient.toLowerCase() === currentUser.name.toLowerCase()) {
+        // const newMessages = new Map(messages);
+        // const prev = newMessages.get(msg.recepient) || [];
+        // newMessages.set(msg.recepient, [...prev, msg]);
+        setMessages((prev) => [...prev, msg]);
+      }
+    });
+  }, [socket, name, room, messages, setRoomData, currentUser]);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("receive-message", (msg) => {
-        console.log({ msg });
-        if (msg.recepient === currentUser.name) {
-          const newMessages = new Map(messages);
-          const prev = newMessages.get(msg.recepient) || [];
-          newMessages.set(msg.recepient, [...prev, msg]);
-          setMessages(newMessages);
-        }
-      });
-    }
-    return () => socket.off("receive-message");
-  }, [socket, currentUser, messages]);
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("receive-message", (msg) => {
+  //       console.log({ msg });
+  //       if (msg.recepient.toLowerCase() === currentUser.name.toLowerCase()) {
+  //         const newMessages = new Map(messages);
+  //         const prev = newMessages.get(msg.recepient) || [];
+  //         newMessages.set(msg.recepient, [...prev, msg]);
+  //         setMessages(newMessages);
+  //       }
+  //     });
+  //   }
+  //   // return () => socket.off("receive-message");
+  // }, [socket, currentUser, messages]);
 
   const handleMessageSubmit = (e) => {
     e.preventDefault();
@@ -77,18 +86,20 @@ const ChatArea = () => {
     const newMessage = {
       sender: currentUser.name,
       recepient: name,
+      room,
       message,
       date: moment().format("DD/MM/YY"),
     };
-    const newMessages = new Map(messages);
-    const prev = newMessages.get(currentUser.name) || [];
-    newMessages.set(currentUser.name, [...prev, newMessage]);
-    setMessages(newMessages);
+    // const newMessages = new Map(messages);
+    // const prev = newMessages.get(currentUser.name) || [];
+    // newMessages.set(currentUser.name, [...prev, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
     setMessage("");
     socket.emit("send-message", newMessage);
   };
 
   function parseMessages() {
+    console.log({ mes: [...messages].map(([name, value]) => value) });
     return [...messages].map(([name, value]) => value);
   }
 
@@ -97,13 +108,19 @@ const ChatArea = () => {
       <Topbar name={name} />
       <div className={styles.chatArea}>
         <div className={styles.viewArea}>
-          {parseMessages()[0]?.map((msg, i) =>
-            msg.sender === name ? (
-              <SenderMessage key={i} msg={msg} />
-            ) : (
-              <OwnerMessage key={i} msg={msg} />
+          {messages
+            ?.filter(
+              (m) =>
+                m.sender.toLowerCase() == currentUser?.name?.toLowerCase() ||
+                m.recepient.toLowerCase() == currentUser?.name?.toLowerCase()
             )
-          )}
+            .map((msg, i) =>
+              msg.sender.toLowerCase() == name.toLowerCase() ? (
+                <SenderMessage key={i} msg={msg} />
+              ) : (
+                <OwnerMessage key={i} msg={msg} />
+              )
+            )}
         </div>
         <form onSubmit={handleMessageSubmit} className={styles.inputArea}>
           <textarea

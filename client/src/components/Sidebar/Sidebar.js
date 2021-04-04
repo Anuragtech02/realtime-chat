@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styles from "./Sidebar.module.scss";
 import SidebarActions from "./SidebarActions";
 import { Search, User } from "react-feather";
@@ -8,6 +8,7 @@ import portraitIcon from "../../Assets/portrait.jpg";
 import { withRouter, useParams } from "react-router";
 import clsx from "clsx";
 import { useSocket } from "../Contexts/SocketContextProvider";
+import { AuthContext } from "../Contexts/AuthContext";
 
 const Sidebar = ({ history }) => {
   const [search, setSearch] = useState("");
@@ -20,16 +21,21 @@ const Sidebar = ({ history }) => {
 
   const { name, room } = useParams();
   const { roomData } = useSocket();
+  const { currentUser } = useContext(AuthContext);
 
   React.useEffect(() => {
     setCurrent(name);
   }, [name]);
 
   React.useEffect(() => {
-    if (roomData?.room) {
-      setUsers(roomData.users);
+    if (roomData?.room && currentUser?.name) {
+      setUsers(
+        roomData.users?.filter(
+          (user) => user.name.toLowerCase() !== currentUser.name.toLowerCase()
+        )
+      );
     }
-  }, [roomData]);
+  }, [roomData, currentUser]);
 
   return (
     <aside className={styles.container}>

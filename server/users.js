@@ -24,9 +24,10 @@ const removeUser = (id) => {
   if (index !== -1) return users.splice(index, 1)[0];
 };
 
-const getUser = (id) => users.find((user) => user.id === id);
+const getUser = (name) =>
+  users.find((user) => user.name.toLowerCase() === name.toLowerCase());
 
 const getUsersInRoom = (user) =>
-  users.filter((inUser) => inUser.room === user.room && user.id !== inUser.id);
+  users.filter((inUser) => inUser.room === user.room);
 
 module.exports = { addUser, removeUser, getUser, getUsersInRoom };

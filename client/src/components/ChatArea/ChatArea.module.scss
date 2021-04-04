@@ -46,5 +46,43 @@
         @extend .flexRow;
       }
     }
+
+    .viewArea {
+      height: 90%;
+      @extend .flexCol;
+      justify-content: flex-end;
+      .message {
+        @extend .flexCol;
+        align-items: flex-end;
+        width: 100%;
+        padding: 5px;
+        margin: 5px 0;
+        .msgInner {
+          border-radius: 5px;
+          background: var(--secondaryColor);
+          padding: 10px;
+          p {
+            color: var(--primaryColor);
+            text-align: right;
+          }
+          z-index: 2;
+        }
+        span {
+          font-size: 0.6rem;
+          color: #25323791;
+          font-weight: 600;
+          margin-top: -20px;
+          transition: all 0.2s ease-in-out;
+        }
+        &:hover {
+          span {
+            margin-top: 5px;
+          }
+        }
+      }
+      .sender {
+        align-items: flex-start;
+      }
+    }
   }
 }

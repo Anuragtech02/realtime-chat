@@ -7,42 +7,29 @@ import userIcon from "../../Assets/user.svg";
 import portraitIcon from "../../Assets/portrait.jpg";
 import { withRouter, useParams } from "react-router";
 import clsx from "clsx";
+import { useSocket } from "../Contexts/SocketContextProvider";
 
 const Sidebar = ({ history }) => {
   const [search, setSearch] = useState("");
   const [current, setCurrent] = useState("");
-  const [chats, setChats] = useState([
-    {
-      name: "Anurag pal",
-      message: "Hi, Hope you're doing well! Welcome to the application.",
-    },
-    {
-      name: "Kalash pal",
-      message: "Hi, Hope you're doing well! Welcome to the application.",
-    },
-    {
-      name: "Aayush Singh",
-      message: "Hi, Hope you're doing well! Welcome to the application.",
-    },
-    {
-      name: "Hello Boy",
-      message: "Hi, Hope you're doing well! Welcome to the application.",
-    },
-    {
-      name: "Iron Man",
-      message: "Hi, Hope you're doing well! Welcome to the application.",
-    },
-  ]);
+  const [users, setUsers] = useState();
 
   const handleClickChat = (name) => {
     history.push(`/${room}/chat/${name}`);
   };
 
   const { name, room } = useParams();
+  const { roomData } = useSocket();
 
   React.useEffect(() => {
     setCurrent(name);
   }, [name]);
+
+  React.useEffect(() => {
+    if (roomData?.room) {
+      setUsers(roomData.users);
+    }
+  }, [roomData]);
 
   return (
     <aside className={styles.container}>
@@ -63,8 +50,8 @@ const Sidebar = ({ history }) => {
         </div>
         <div className={styles.chats}>
           <h6>My Chats</h6>
-          {chats?.length ? (
-            chats.map((chat, i) => (
+          {users?.length ? (
+            users.map((chat, i) => (
               <div
                 onClick={() => handleClickChat(chat.name)}
                 key={i}
@@ -97,3 +84,26 @@ const Sidebar = ({ history }) => {
 };
 
 export default withRouter(Sidebar);
+
+// [
+//   {
+//     name: "Anurag pal",
+//     message: "Hi, Hope you're doing well! Welcome to the application.",
+//   },
+//   {
+//     name: "Kalash pal",
+//     message: "Hi, Hope you're doing well! Welcome to the application.",
+//   },
+//   {
+//     name: "Aayush Singh",
+//     message: "Hi, Hope you're doing well! Welcome to the application.",
+//   },
+//   {
+//     name: "Hello Boy",
+//     message: "Hi, Hope you're doing well! Welcome to the application.",
+//   },
+//   {
+//     name: "Iron Man",
+//     message: "Hi, Hope you're doing well! Welcome to the application.",
+//   },
+// ]

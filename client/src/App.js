@@ -5,28 +5,31 @@ import { Login, ChatArea, Sidebar } from "./components";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import AuthContextProvider from "./components/Contexts/AuthContext";
 import GlobalContextProvider from "./components/Contexts/GlobalContext";
+import SocketContextProvider from "./components/Contexts/SocketContextProvider";
 
 const App = () => {
   return (
     <AuthContextProvider>
       <GlobalContextProvider>
-        <Router>
-          <div className={styles.container}>
-            <Switch>
-              <Route path="/login" exact component={Login} />
-              <PrivateRoute
-                path="/:room"
-                exact
-                component={() => <WithSidebar component={ChatArea} />}
-              />
-              <PrivateRoute
-                path="/:room/chat/:name"
-                exact
-                component={() => <WithSidebar component={ChatArea} />}
-              />
-            </Switch>
-          </div>
-        </Router>
+        <SocketContextProvider>
+          <Router>
+            <div className={styles.container}>
+              <Switch>
+                <Route path="/login" exact component={Login} />
+                <PrivateRoute
+                  path="/:room"
+                  exact
+                  component={() => <WithSidebar component={ChatArea} />}
+                />
+                <PrivateRoute
+                  path="/:room/chat/:name"
+                  exact
+                  component={() => <WithSidebar component={ChatArea} />}
+                />
+              </Switch>
+            </div>
+          </Router>
+        </SocketContextProvider>
       </GlobalContextProvider>
     </AuthContextProvider>
   );

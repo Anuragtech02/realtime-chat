@@ -5,6 +5,7 @@ import { AuthContext } from "../Contexts/AuthContext";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 import short from "short-uuid";
+import { useSocket } from "../Contexts/SocketContextProvider";
 
 const Login = ({ history }) => {
   const [name, setName] = useState("");
@@ -12,12 +13,16 @@ const Login = ({ history }) => {
   const [loading, setLoading] = useState(false);
 
   const { currentUser, handleChangeUser } = useContext(AuthContext);
+  const { socket } = useSocket();
 
   useEffect(() => {
     if (currentUser?.name && room?.length && !loading) {
+      if (socket) {
+        socket.emit("join", { name, room });
+      }
       history.push(`/${room}`);
     }
-  }, [currentUser, history, loading, room]);
+  }, [currentUser, history, loading, room, socket, name]);
 
   const onSubmit = (e) => {
     e.preventDefault();

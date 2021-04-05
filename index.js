@@ -13,6 +13,10 @@ app.use(cors());
 app.use(router);
 app.set("port", process.env.PORT || 5000);
 const io = require("socket.io")(server);
+io.configure(function () {
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 10);
+});
 
 let count = 0;
 

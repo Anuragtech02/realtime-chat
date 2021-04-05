@@ -11,6 +11,7 @@ const server = http.Server(app);
 
 app.use(cors());
 app.use(router);
+app.set("port", process.env.PORT || 5000);
 const io = require("socket.io")(server);
 
 let count = 0;

@@ -17,6 +17,7 @@ const io = require("socket.io")(server);
 let count = 0;
 
 io.listen(server);
+io.origins("*:*");
 
 io.on("connection", (socket) => {
   console.log("Connected", count++);

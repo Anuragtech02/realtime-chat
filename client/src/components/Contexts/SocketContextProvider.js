@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import io from "socket.io-client";
 
-// const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://realtime-chat-rn.herokuapp.com/";
 
 export const SocketContext = createContext({});
 
@@ -15,7 +15,7 @@ const SocketContextProvider = ({ children }) => {
   const [roomData, setRoomData] = useState();
 
   useEffect(() => {
-    const newSocket = io.connect();
+    const newSocket = io(ENDPOINT);
     setSocket(newSocket);
     return () => newSocket.close();
   }, []);

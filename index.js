@@ -1,6 +1,7 @@
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const router = require("./Router/router");
 const { addUser, removeUser, getUser, getUsersInRoom } = require("./users");
@@ -11,6 +12,12 @@ const server = http.Server(app);
 app.use(cors());
 app.use(router);
 const io = require("socket.io")(server);
+
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 let count = 0;
 

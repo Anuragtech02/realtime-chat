@@ -8,8 +8,8 @@ const { addUser, removeUser, getUser, getUsersInRoom } = require("./users");
 const app = express();
 const server = http.Server(app);
 
-// app.use(cors());
-// app.use(router);
+app.use(cors());
+app.use(router);
 const io = require("socket.io")(server);
 
 let count = 0;

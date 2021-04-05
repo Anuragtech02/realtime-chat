@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
 import styles from "./Sidebar.module.scss";
 import SidebarActions from "./SidebarActions";
-import { Search, User } from "react-feather";
+import { Search } from "react-feather";
 import { Avatar } from "@material-ui/core";
-import userIcon from "../../Assets/user.svg";
 import portraitIcon from "../../Assets/portrait.jpg";
 import { withRouter, useParams } from "react-router";
 import clsx from "clsx";
@@ -92,26 +91,3 @@ const Sidebar = ({ history }) => {
 };
 
 export default withRouter(Sidebar);
-
-// [
-//   {
-//     name: "Anurag pal",
-//     message: "Hi, Hope you're doing well! Welcome to the application.",
-//   },
-//   {
-//     name: "Kalash pal",
-//     message: "Hi, Hope you're doing well! Welcome to the application.",
-//   },
-//   {
-//     name: "Aayush Singh",
-//     message: "Hi, Hope you're doing well! Welcome to the application.",
-//   },
-//   {
-//     name: "Hello Boy",
-//     message: "Hi, Hope you're doing well! Welcome to the application.",
-//   },
-//   {
-//     name: "Iron Man",
-//     message: "Hi, Hope you're doing well! Welcome to the application.",
-//   },
-// ]

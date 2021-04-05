@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
 
     socket.join(room);
 
-    console.log(getUsersInRoom(user));
+    // console.log(getUsersInRoom(user));
 
     io.to(room).emit("room-data", {
       room: user.room,
@@ -42,7 +42,8 @@ io.on("connection", (socket) => {
     // socket.broadcast.to(msg.recepient).emit("receive-message", msg);
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", (h, a, b) => {
+    console.log(h, a, b);
     console.log("Disconnected");
   });
 });

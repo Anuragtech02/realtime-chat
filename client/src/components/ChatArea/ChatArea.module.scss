@@ -47,11 +47,12 @@
         @extend .flexRow;
       }
     }
-
+    overflow-x: auto;
+    overflow-y: hidden;
     .viewArea {
       height: 90%;
-      overflow: hidden;
-      overflow-y: auto;
+      // overflow-x: hidden;
+      // overflow-y: scroll;
       @extend .flexCol;
       justify-content: flex-end;
       .message {
@@ -85,6 +86,9 @@
       }
       .sender {
         align-items: flex-start;
+        .msgInner {
+          background: rgba(0, 0, 0, 0.1);
+        }
       }
     }
   }

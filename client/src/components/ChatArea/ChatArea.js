@@ -7,21 +7,15 @@ import { Send, Smile } from "react-feather";
 import { GlobalContext } from "../Contexts/GlobalContext";
 import { AuthContext } from "../Contexts/AuthContext";
 import { useSocket } from "../Contexts/SocketContextProvider";
-import io from "socket.io-client";
 import clsx from "clsx";
 import moment from "moment";
 
-let socket;
-
-const ENDPOINT = "http://localhost:5000/";
+// const ENDPOINT = "http://localhost:5000/";
 
 const ChatArea = () => {
   const { name, room } = useParams();
-  const [emoji, setEmoji] = useState(null);
-  const [emojiOpen, setEmojiOpen] = useState(false);
   const [anchor, setAnchor] = useState(null);
   const [message, setMessage] = useState("");
-  // const [messages, setMessages] = useState([]);
 
   const textAreaRef = useRef();
 
@@ -32,7 +26,6 @@ const ChatArea = () => {
   };
 
   const onEmojiClick = (e, emoji) => {
-    setEmoji(emoji);
     setMessage((curr) => curr + emoji.emoji);
   };
 
@@ -54,31 +47,7 @@ const ChatArea = () => {
       console.log({ data });
       setRoomData(data);
     });
-    // socket.on("receive-message", (msg) => {
-    //   console.log({ msg });
-    //   if (msg.recepient.toLowerCase() === currentUser.name.toLowerCase()) {
-    //     // const newMessages = new Map(messages);
-    //     // const prev = newMessages.get(msg.recepient) || [];
-    //     // newMessages.set(msg.recepient, [...prev, msg]);
-    //     setMessages((prev) => [...prev, msg]);
-    //   }
-    // });
   }, [socket, setRoomData]);
-
-  // useEffect(() => {
-  //   if (socket) {
-  //     socket.on("receive-message", (msg) => {
-  //       console.log({ msg });
-  //       if (msg.recepient.toLowerCase() === currentUser.name.toLowerCase()) {
-  //         const newMessages = new Map(messages);
-  //         const prev = newMessages.get(msg.recepient) || [];
-  //         newMessages.set(msg.recepient, [...prev, msg]);
-  //         setMessages(newMessages);
-  //       }
-  //     });
-  //   }
-  //   // return () => socket.off("receive-message");
-  // }, [socket, currentUser, messages]);
 
   const handleMessageSubmit = (e) => {
     e.preventDefault();
@@ -90,38 +59,31 @@ const ChatArea = () => {
       message,
       date: moment().format("DD/MM/YY"),
     };
-    // const newMessages = new Map(messages);
-    // const prev = newMessages.get(currentUser.name) || [];
-    // newMessages.set(currentUser.name, [...prev, newMessage]);
-    // setMessages((prev) => [...prev, newMessage]);
+
     sendMessage(newMessage);
     setMessage("");
-    // socket.emit("send-message", newMessage);
   };
 
   useEffect(() => {
     console.log(messages?.get(name?.toLowerCase()), messages);
   }, [messages, name]);
 
-  function parseMessages() {
-    console.log({ mes: [...messages].map(([name, value]) => value) });
-    return [...messages].map(([name, value]) => value);
-  }
-
   return (
     <div className={styles.container}>
       <Topbar name={name} />
       <div className={styles.chatArea}>
         <div className={styles.viewArea}>
-          {messages
-            ?.get(name?.toLowerCase())
-            ?.messages?.map((msg, i) =>
-              msg.sender.toLowerCase() === name.toLowerCase() ? (
-                <SenderMessage key={i} msg={msg} />
-              ) : (
-                <OwnerMessage key={i} msg={msg} />
-              )
-            )}
+          {messages?.get(name?.toLowerCase())?.messages?.map((msg, i) => (
+            <MessageComponent
+              key={i}
+              msg={msg}
+              cls={
+                msg.sender.toLowerCase() === name.toLowerCase()
+                  ? styles.sender
+                  : styles.owner
+              }
+            />
+          ))}
         </div>
         <form onSubmit={handleMessageSubmit} className={styles.inputArea}>
           <textarea
@@ -186,24 +148,13 @@ const Topbar = ({ name }) => {
   );
 };
 
-const SenderMessage = ({ msg }) => {
+const MessageComponent = ({ msg, cls }) => {
   return (
-    <div className={clsx(styles.message, styles.sender)}>
+    <div className={clsx(styles.message, cls)}>
       <div className={styles.msgInner}>
         <p>{msg.message}</p>
       </div>
-      <span>{msg.date}</span>
-    </div>
-  );
-};
-
-const OwnerMessage = ({ msg }) => {
-  return (
-    <div className={clsx(styles.message, styles.owner)}>
-      <div className={styles.msgInner}>
-        <p>{msg.message}</p>
-      </div>
-      <span>{msg.date}</span>
+      {/* <span>{msg.date}</span> */}
     </div>
   );
 };

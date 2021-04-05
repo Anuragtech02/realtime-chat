@@ -5,11 +5,8 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import io from "socket.io-client";
 import { AuthContext } from "./AuthContext";
 import { useSocket } from "./SocketContextProvider";
-
-const ENDPOINT = "http://localhost:5000";
 
 export const GlobalContext = createContext({});
 

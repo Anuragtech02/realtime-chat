@@ -3,7 +3,6 @@ import styles from "./Login.module.scss";
 import { Button, CircularProgress } from "@material-ui/core";
 import { AuthContext } from "../Contexts/AuthContext";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import short from "short-uuid";
 import { useSocket } from "../Contexts/SocketContextProvider";
 

@@ -14,6 +14,7 @@ const Sidebar = ({ history }) => {
   const [search, setSearch] = useState("");
   const [current, setCurrent] = useState("");
   const [users, setUsers] = useState();
+  const [usersCopy, setUsersCopy] = useState();
 
   const handleClickChat = (name) => {
     history.push(`/${room}/chat/${name}`);
@@ -30,11 +31,11 @@ const Sidebar = ({ history }) => {
 
   React.useEffect(() => {
     if (roomData?.room && currentUser?.name) {
-      setUsers(
-        roomData.users?.filter(
-          (user) => user.name.toLowerCase() !== currentUser.name.toLowerCase()
-        )
+      const data = roomData.users?.filter(
+        (user) => user.name.toLowerCase() !== currentUser.name.toLowerCase()
       );
+      setUsers(data);
+      setUsersCopy(data);
     }
   }, [roomData, currentUser]);
 
@@ -57,8 +58,8 @@ const Sidebar = ({ history }) => {
         </div>
         <div className={styles.chats}>
           <h6>My Chats</h6>
-          {users?.length ? (
-            users.map((chat, i) => (
+          {usersCopy?.length ? (
+            usersCopy.map((chat, i) => (
               <div
                 onClick={() => handleClickChat(chat.name)}
                 key={i}

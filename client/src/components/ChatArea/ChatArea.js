@@ -26,6 +26,7 @@ const ChatArea = () => {
   };
 
   const onEmojiClick = (e, emoji) => {
+    e.stopPropagation();
     setMessage((curr) => curr + emoji.emoji);
   };
 
@@ -64,6 +65,12 @@ const ChatArea = () => {
     setMessage("");
   };
 
+  const handleEnter = (e) => {
+    if (e.which === 13 && !e.shiftKey) {
+      handleMessageSubmit(e);
+    }
+  };
+
   useEffect(() => {
     console.log(messages?.get(name?.toLowerCase()), messages);
   }, [messages, name]);
@@ -89,6 +96,7 @@ const ChatArea = () => {
           <textarea
             ref={textAreaRef}
             onKeyUp={textAreaAdjust}
+            onKeyPress={handleEnter}
             name="chat"
             rows="1"
             disabled={Boolean(!name)}
@@ -100,7 +108,7 @@ const ChatArea = () => {
             onChange={(e) => setMessage(e.target.value)}
           />
           <div className={styles.actionBtns}>
-            <IconButton type="submit">
+            <IconButton type="submit" disabled={Boolean(!name)}>
               <Send />
             </IconButton>
             <div className={styles.selectEmoji}>
@@ -117,9 +125,14 @@ const ChatArea = () => {
                 keepMounted
                 open={Boolean(anchor)}
                 onClose={handleClose}
+                disablePortal={Boolean(!name)}
+                hidden={Boolean(!name)}
               >
-                <MenuItem onClick={handleClose}>
-                  <div className={styles.emojiPicker}>
+                <MenuItem disabled={Boolean(!name)} onClick={handleClose}>
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className={styles.emojiPicker}
+                  >
                     <Picker
                       onEmojiClick={onEmojiClick}
                       disableAutoFocus={true}

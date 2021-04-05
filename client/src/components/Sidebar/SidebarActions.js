@@ -1,25 +1,35 @@
 import React, { useState } from "react";
 import styles from "./SidebarActions.module.scss";
-import { MessageCircle, User, Settings } from "react-feather";
+import { MessageCircle, User, Copy } from "react-feather";
 import { IconButton, Avatar, Tooltip, makeStyles } from "@material-ui/core";
 import portrait from "../../Assets/portrait.jpg";
+import { useParams } from "react-router-dom";
 
 const SidebarActions = () => {
   const classes = useStyles();
-  const [current, setCurrent] = useState("chat");
+  const [current, setCurrent] = useState("Chat");
+
+  const { room } = useParams();
+
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText(room);
+  };
 
   const actions = [
     {
-      name: "account",
+      name: "Account",
       icon: User,
+      onClick: () => {},
     },
     {
-      name: "chat",
+      name: "Chat",
       icon: MessageCircle,
+      onClick: () => {},
     },
     {
-      name: "settings",
-      icon: Settings,
+      name: "Copy Link",
+      icon: Copy,
+      onClick: handleCopyLink,
     },
   ];
 
@@ -39,6 +49,7 @@ const SidebarActions = () => {
                       ? "var(--secondaryColor)"
                       : "transparent",
                 }}
+                onClick={item.onClick}
               >
                 <item.icon
                   color={

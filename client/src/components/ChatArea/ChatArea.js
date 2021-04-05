@@ -21,7 +21,7 @@ const ChatArea = () => {
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [anchor, setAnchor] = useState(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([]);
 
   const textAreaRef = useRef();
 
@@ -42,7 +42,7 @@ const ChatArea = () => {
   const handleClose = () => {
     setAnchor(null);
   };
-  const { data } = useContext(GlobalContext);
+  const { messages, sendMessage } = useContext(GlobalContext);
   const { currentUser } = useContext(AuthContext);
   const { socket, setRoomData } = useSocket();
 
@@ -54,16 +54,16 @@ const ChatArea = () => {
       console.log({ data });
       setRoomData(data);
     });
-    socket.on("receive-message", (msg) => {
-      console.log({ msg });
-      if (msg.recepient.toLowerCase() === currentUser.name.toLowerCase()) {
-        // const newMessages = new Map(messages);
-        // const prev = newMessages.get(msg.recepient) || [];
-        // newMessages.set(msg.recepient, [...prev, msg]);
-        setMessages((prev) => [...prev, msg]);
-      }
-    });
-  }, [socket, name, room, messages, setRoomData, currentUser]);
+    // socket.on("receive-message", (msg) => {
+    //   console.log({ msg });
+    //   if (msg.recepient.toLowerCase() === currentUser.name.toLowerCase()) {
+    //     // const newMessages = new Map(messages);
+    //     // const prev = newMessages.get(msg.recepient) || [];
+    //     // newMessages.set(msg.recepient, [...prev, msg]);
+    //     setMessages((prev) => [...prev, msg]);
+    //   }
+    // });
+  }, [socket, setRoomData]);
 
   // useEffect(() => {
   //   if (socket) {
@@ -84,8 +84,8 @@ const ChatArea = () => {
     e.preventDefault();
     if (!message) return;
     const newMessage = {
-      sender: currentUser.name,
-      recepient: name,
+      sender: currentUser.name?.toLowerCase(),
+      recepient: name?.toLowerCase(),
       room,
       message,
       date: moment().format("DD/MM/YY"),
@@ -93,10 +93,15 @@ const ChatArea = () => {
     // const newMessages = new Map(messages);
     // const prev = newMessages.get(currentUser.name) || [];
     // newMessages.set(currentUser.name, [...prev, newMessage]);
-    setMessages((prev) => [...prev, newMessage]);
+    // setMessages((prev) => [...prev, newMessage]);
+    sendMessage(newMessage);
     setMessage("");
-    socket.emit("send-message", newMessage);
+    // socket.emit("send-message", newMessage);
   };
+
+  useEffect(() => {
+    console.log(messages?.get(name?.toLowerCase()), messages);
+  }, [messages, name]);
 
   function parseMessages() {
     console.log({ mes: [...messages].map(([name, value]) => value) });
@@ -109,13 +114,9 @@ const ChatArea = () => {
       <div className={styles.chatArea}>
         <div className={styles.viewArea}>
           {messages
-            ?.filter(
-              (m) =>
-                m.sender.toLowerCase() == currentUser?.name?.toLowerCase() ||
-                m.recepient.toLowerCase() == currentUser?.name?.toLowerCase()
-            )
-            .map((msg, i) =>
-              msg.sender.toLowerCase() == name.toLowerCase() ? (
+            ?.get(name?.toLowerCase())
+            ?.messages?.map((msg, i) =>
+              msg.sender.toLowerCase() === name.toLowerCase() ? (
                 <SenderMessage key={i} msg={msg} />
               ) : (
                 <OwnerMessage key={i} msg={msg} />
@@ -190,8 +191,8 @@ const SenderMessage = ({ msg }) => {
     <div className={clsx(styles.message, styles.sender)}>
       <div className={styles.msgInner}>
         <p>{msg.message}</p>
-        <span>{msg.date}</span>
       </div>
+      <span>{msg.date}</span>
     </div>
   );
 };

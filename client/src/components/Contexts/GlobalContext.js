@@ -1,28 +1,56 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import io from "socket.io-client";
 import { AuthContext } from "./AuthContext";
+import { useSocket } from "./SocketContextProvider";
 
 const ENDPOINT = "http://localhost:5000";
 
 export const GlobalContext = createContext({});
 
 const GlobalContextProvider = ({ children }) => {
-  const [data, setData] = useState([]);
-  const [socket, setSocket] = useState();
-  // const [name, setName] = useState("");
-  // const [room, setRoom] = useState("");
+  const [messages, setMessages] = useState(new Map());
 
   const { currentUser } = useContext(AuthContext);
+  const { socket } = useSocket();
+
+  const addMessageToState = useCallback(
+    (to, msg) => {
+      const newMessages = new Map(messages);
+      const prev = newMessages.get(to) || {};
+      const prevMessages = prev?.messages || [];
+      newMessages.set(to, {
+        newMessage: msg.message,
+        messages: [...prevMessages, msg],
+      });
+      setMessages(newMessages);
+    },
+    [messages]
+  );
 
   useEffect(() => {
-    // const { name, room } = currentUser;
-    // const newSocket = io(ENDPOINT);
-    // setSocket(newSocket);
-    // return () => newSocket.close();
-  }, [currentUser]);
+    if (socket && currentUser) {
+      socket.on("receive-message", (msg) => {
+        console.log({ msg });
+        if (msg.recepient.toLowerCase() === currentUser.name.toLowerCase()) {
+          addMessageToState(msg.sender, msg);
+        }
+      });
+    }
+  }, [currentUser, socket, addMessageToState]);
+
+  const sendMessage = (msg) => {
+    addMessageToState(msg.recepient, msg);
+    if (socket) socket.emit("send-message", msg);
+  };
 
   return (
-    <GlobalContext.Provider value={{ data, socket }}>
+    <GlobalContext.Provider value={{ messages, sendMessage }}>
       {children}
     </GlobalContext.Provider>
   );

@@ -9,6 +9,7 @@ import { withRouter, useParams } from "react-router";
 import clsx from "clsx";
 import { useSocket } from "../Contexts/SocketContextProvider";
 import { AuthContext } from "../Contexts/AuthContext";
+import { GlobalContext } from "../Contexts/GlobalContext";
 
 const Sidebar = ({ history }) => {
   const [search, setSearch] = useState("");
@@ -22,6 +23,7 @@ const Sidebar = ({ history }) => {
   const { name, room } = useParams();
   const { roomData } = useSocket();
   const { currentUser } = useContext(AuthContext);
+  const { messages } = useContext(GlobalContext);
 
   React.useEffect(() => {
     setCurrent(name);
@@ -74,7 +76,7 @@ const Sidebar = ({ history }) => {
                 />
                 <div className={styles.chatUserInfo}>
                   <h6>{chat.name}</h6>
-                  <p>{chat.message}</p>
+                  <p>{messages?.get(chat.name)?.newMessage}</p>
                 </div>
               </div>
             ))

@@ -10,12 +10,12 @@ import SocketContextProvider from "./components/Contexts/SocketContextProvider";
 const App = () => {
   return (
     <AuthContextProvider>
-      <GlobalContextProvider>
-        <SocketContextProvider>
-          <Router>
-            <div className={styles.container}>
-              <Switch>
-                <Route path="/login" exact component={Login} />
+      <SocketContextProvider>
+        <Router>
+          <div className={styles.container}>
+            <Switch>
+              <Route path="/login" exact component={Login} />
+              <GlobalContextProvider>
                 <PrivateRoute
                   path="/:room"
                   exact
@@ -26,11 +26,11 @@ const App = () => {
                   exact
                   component={() => <WithSidebar component={ChatArea} />}
                 />
-              </Switch>
-            </div>
-          </Router>
-        </SocketContextProvider>
-      </GlobalContextProvider>
+              </GlobalContextProvider>
+            </Switch>
+          </div>
+        </Router>
+      </SocketContextProvider>
     </AuthContextProvider>
   );
 };

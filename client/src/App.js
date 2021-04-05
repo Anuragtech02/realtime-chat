@@ -1,6 +1,11 @@
 import React from "react";
 import styles from "./App.module.scss";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import { Login, ChatArea, Sidebar } from "./components";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import AuthContextProvider from "./components/Contexts/AuthContext";
@@ -14,7 +19,7 @@ const App = () => {
         <Router>
           <div className={styles.container}>
             <Switch>
-              <Route path="/login" exact component={Login} />
+              <Route path="/" exact component={Login} />
               <GlobalContextProvider>
                 <PrivateRoute
                   path="/:room"

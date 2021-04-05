@@ -10,7 +10,7 @@ const app = express();
 const server = http.Server(app);
 
 app.use(cors());
-app.use(router);
+// app.use(router);
 const io = require("socket.io")(server);
 
 app.use(express.static(path.join(__dirname, "build")));
